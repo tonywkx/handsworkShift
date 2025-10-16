@@ -7,13 +7,26 @@
     "ios": "react-native run-ios",
     "lint": "eslint .",
     "start": "react-native start",
-    "test": "jest"
+    "test": "jest",
+    "pods": "cd ios && pod install",
+    "android:release": "yarn android --mode=release",
+    "ios:release": "yarn ios --mode Release",
+    "permissions": "react-native setup-ios-permissions && yarn pods",
+    "android:local": "yarn android --mode=local",
+    "ios:local": "yarn ios --mode=local",
+    "bundle:ios": "react-native bundle --entry-file index.js --platform ios --dev false --bundle-output ios/main.jsbundle --assets-dest ios",
+    "gradle:clean": "cd android && ./gradlew clean",
+    "postinstall": "npx patch-package && yarn pods",
+    "reactotron:adb-reverse": "adb reverse tcp:9090 tcp:9090"
   },
   "dependencies": {
+    "@react-native/new-app-screen": "0.82.0",
+    "babel-plugin-module-resolver": "^5.0.2",
     "react": "19.1.1",
     "react-native": "0.82.0",
-    "@react-native/new-app-screen": "0.82.0",
-    "react-native-safe-area-context": "^5.5.2"
+    "react-native-safe-area-context": "^5.5.2",
+    "reactotron-core-client": "^2.9.9",
+    "reactotron-react-native": "^5.1.18"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
