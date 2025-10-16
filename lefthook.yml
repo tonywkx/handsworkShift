@@ -1,14 +1,8 @@
 pre-commit:
-  parallel: true
+  parallel: false
   commands:
     lint:
-      glob: "*.{js,jsx,ts,tsx}"
-      run: yarn eslint {staged_files}
-    types:
-      glob: "*.{ts,tsx}"
-      run: yarn run tsc -p tsconfig.json --noEmit
-commit-msg:
-  parallel: true
-  commands:
-    commitlint:
-      run: yarn commitlint --edit
+      glob: '*.{ts,tsx,js,jsx}'
+      run: eslint {staged_files}
+    type-check:
+      run: tsc --noEmit
