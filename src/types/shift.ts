@@ -1,5 +1,5 @@
 export interface Shift {
-  id?: string;
+  id: string;
   logo: string;
   address: string;
   companyName: string;

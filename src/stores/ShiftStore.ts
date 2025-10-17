@@ -1,4 +1,4 @@
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable, action, runInAction } from 'mobx';
 import axios from 'axios';
 import { Shift, Location } from '../types/shift';
 
@@ -10,36 +10,50 @@ class ShiftStore {
   userLocation: Location | null = null;
 
   constructor() {
-    makeAutoObservable(this);
+    makeAutoObservable(this, {
+      fetchShifts: action,
+    });
   }
 
-  setUserLocation(location: Location) {
+  setUserLocation = action((location: Location) => {
     this.userLocation = location;
-  }
+  });
 
   async fetchShifts(location: Location) {
-    this.loading = true;
-    this.error = null;
+    runInAction(() => {
+      this.loading = true;
+      this.error = null;
+    });
+
+    console.log(location, 'in store');
+
     try {
       const response = await axios.get(
-        `https://mobile.handswork.pro/api/shifts/map-list-unauthorized?latitude=${location.latitude}&longitude=${location.longitude}`
+        `https://mobile.handswork.pro/api/shifts/map-list-unauthorized?latitude=45.039268&longitude=38.987221`
       );
-      this.shifts = response.data || [];
+
+      runInAction(() => {
+        this.shifts = response.data.data || [];
+      });
     } catch (err) {
-      this.error = 'Failed to fetch shifts';
+      runInAction(() => {
+        this.error = 'Failed to fetch shifts';
+      });
       console.error(err);
     } finally {
-      this.loading = false;
+      runInAction(() => {
+        this.loading = false;
+      });
     }
   }
 
-  selectShift(shift: Shift) {
+  selectShift = action((shift: Shift) => {
     this.selectedShift = shift;
-  }
+  });
 
-  clearSelection() {
+  clearSelection = action(() => {
     this.selectedShift = null;
-  }
+  });
 }
 
 export default new ShiftStore();
