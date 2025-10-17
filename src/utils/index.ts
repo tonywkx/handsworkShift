@@ -1,0 +1,4 @@
+export enum APP_ROUTES {
+  SHIFT_LIST = 'SHIFT_LIST',
+  SHIFT_DETAILS = 'SHIFT_DETAILS',
+}

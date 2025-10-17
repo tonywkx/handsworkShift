@@ -1,24 +1,30 @@
-import React, { useEffect } from 'react';
-import { View, FlatList, ActivityIndicator, Text } from 'react-native';
+import React, { useCallback, useEffect } from 'react';
+import { FlatList, ActivityIndicator } from 'react-native';
 import { observer } from 'mobx-react-lite';
-import styled from 'styled-components/native';
 import shiftStore from '../stores/ShiftStore';
 import { requestLocationPermission, getCurrentLocation } from '../utils/geolocation';
 import { Shift } from '../types/shift';
-import { ShiftListItem } from 'src/components/ShiftListItem';
+import styled from 'styled-components/native';
+import { ShiftListItem } from 'src/components/shift-list-item';
+import { APP_ROUTES } from 'src/utils';
+import { EmptyStateContainer, EmptyStateText, Separator } from './styles';
 
-const Container = styled(View)`
+
+const Container = styled.View`
   flex: 1;
   background-color: #f5f5f5;
+  margin-horizontal: 16px;
+  margin-top: 8px;
+  margin-bottom: 32px;
 `;
 
-const LoadingContainer = styled(View)`
+const LoadingContainer = styled.View`
   flex: 1;
   justify-content: center;
   align-items: center;
 `;
 
-const ErrorText = styled(Text)`
+const ErrorText = styled.Text`
   color: red;
   text-align: center;
   padding: 20px;
@@ -48,8 +54,24 @@ export const ShiftListScreen = observer(({ navigation }: any) => {
 
   const handleSelectShift = (shift: Shift) => {
     shiftStore.selectShift(shift);
-    navigation.navigate('ShiftDetail');
+    navigation.navigate(APP_ROUTES.SHIFT_DETAILS);
   };
+
+  const renderItem = useCallback(
+    ({ item }: { item: Shift }) => (
+      <ShiftListItem
+        shift={item}
+        onPress={() => handleSelectShift(item)}
+      />
+    ),
+    [handleSelectShift]
+  );
+
+   const renderEmptyList = () => (
+  <EmptyStateContainer>
+    <EmptyStateText>Рядом с вами доступные смены не найдены</EmptyStateText>
+  </EmptyStateContainer>
+  );
 
   if (shiftStore.loading) {
     return (
@@ -65,12 +87,15 @@ export const ShiftListScreen = observer(({ navigation }: any) => {
       <FlatList
         data={shiftStore.shifts}
         keyExtractor={(item, index) => item.id.toString() ?? index.toString()}
-        renderItem={({ item }) => (
-          <ShiftListItem
-            shift={item}
-            onPress={() => handleSelectShift(item)}
-          />
-        )}
+        renderItem={renderItem}
+        showsVerticalScrollIndicator={false}
+        ListEmptyComponent={renderEmptyList}
+        ItemSeparatorComponent={Separator}
+        removeClippedSubviews={true}
+        maxToRenderPerBatch={10}
+        updateCellsBatchingPeriod={50}
+        initialNumToRender={10}
+        scrollEventThrottle={16}
       />
     </Container>
   );

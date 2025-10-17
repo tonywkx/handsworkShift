@@ -1,13 +1,11 @@
-import { StatusBar, StyleSheet, useColorScheme } from 'react-native';
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
-
 import React from 'react';
+import { StatusBar, StyleSheet, useColorScheme } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { ShiftListScreen } from './screens/ShiftListScreen';
+import { ShiftListScreen } from './screens/shift-list-screen';
+import { ShiftDetailScreen } from './screens/shift-detail-screen';
+import { APP_ROUTES } from './utils';
 
 const Stack = createNativeStackNavigator();
 
@@ -23,30 +21,23 @@ function App() {
 }
 
 function AppContent() {
-  const safeAreaInsets = useSafeAreaInsets();
 
   return (
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
-          name="ShiftList"
+          name={APP_ROUTES.SHIFT_LIST}
           component={ShiftListScreen}
-          options={{ title: 'Available Shifts' }}
+          options={{ title: 'Доступные смены', headerTitleAlign: 'center',}}
         />
-       {/*<Stack.Screen
-          name="ShiftDetail"
+       <Stack.Screen
+          name={APP_ROUTES.SHIFT_DETAILS}
           component={ShiftDetailScreen}
-          options={{ title: 'Shift Details' }}
-        /> */}
+          options={{ title: 'Детали смены', headerTitleAlign: 'center', }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
 
 export default App;
