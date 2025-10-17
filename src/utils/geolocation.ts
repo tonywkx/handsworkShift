@@ -17,9 +17,12 @@ export async function requestLocationPermission(): Promise<boolean> {
       );
       return granted === PermissionsAndroid.RESULTS.GRANTED;
     } catch (err) {
+      console.error('Android permission error:', err);
       return false;
     }
   }
+  
+  // for iOS, permission must be granted manually in settings
   return true;
 }
 
@@ -33,11 +36,12 @@ export async function getCurrentLocation(): Promise<Location> {
         });
       },
       error => {
+        console.error('Geolocation error:', error);
         reject(error);
       },
       {
         enableHighAccuracy: true,
-        timeout: 15000,
+        timeout: 30000,
         maximumAge: 0,
       }
     );

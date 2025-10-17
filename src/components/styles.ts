@@ -6,7 +6,6 @@ export const ItemContainer = styled.TouchableOpacity`
   border-bottom-color: #e0e0e0;
   padding: 12px 16px;
   flex-direction: row;
-  
 `;
 
 export const LogoImage = styled.Image`
